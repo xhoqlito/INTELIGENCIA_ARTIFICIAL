@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INTELIGENCIA ARTIFICIAL - UNMSM (2do Ciclo)</title>
+    <!-- Google Fonts Pixel Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #121418;
+            --bg-card: #1e222b;
+            --bg-card-border: #3a4150;
+            --mc-green: #55ff55;
+            --mc-gold: #ffaa00;
+            --mc-yellow: #ffff55;
+            --mc-aqua: #55ffff;
+            --mc-purple: #bf55ec;
+            --text-main: #e0e0e0;
+            --text-light: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            image-rendering: pixelated;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 15%, rgba(170, 0, 255, 0.2) 0%, transparent 60%),
+                linear-gradient(rgba(18, 20, 24, 0.92), rgba(18, 20, 24, 0.96));
+            color: var(--text-main);
+            font-family: 'VT323', monospace;
+            font-size: 20px;
+            line-height: 1.4;
+            padding: 20px 10px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        h1, h2, h3, h4, .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        .main-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.3rem;
+            color: #e0b0ff;
+            margin: 15px 0 10px 0;
+            letter-spacing: 2px;
+            line-height: 1.3;
+            text-align: center;
+            text-shadow: 
+                4px 4px 0px #000000,
+                -2px -2px 0px #000000,
+                0px 0px 15px rgba(191, 85, 236, 0.8);
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 15px;
+            background: rgba(22, 26, 33, 0.88);
+            border: 4px solid #3d4656;
+            box-shadow: inset -4px -4px 0px #11141a, inset 4px 4px 0px #5e6b82, 0 10px 25px rgba(0,0,0,0.8);
+            margin-bottom: 35px;
+        }
+
+        .subtitle-ep {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            color: var(--mc-purple);
+            margin-bottom: 12px;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .slogan { font-size: 1.25rem; color: #d0d7e2; max-width: 750px; margin: 10px auto; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 40px 0 20px 0;
+            padding-bottom: 8px;
+            border-bottom: 3px dashed #3a4150;
+        }
+
+        .section-icon { width: 28px; height: 28px; background-color: var(--mc-purple); }
+        .section-title { font-size: 1.1rem; color: var(--mc-purple); text-shadow: 2px 2px 0 #000; }
+
+        .card-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+        .mc-card {
+            background: var(--bg-card);
+            border: 3px solid var(--bg-card-border);
+            box-shadow: inset -3px -3px 0 #111318, inset 3px 3px 0 #4f586b;
+            padding: 20px;
+        }
+
+        .card-top { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 10px; }
+        .slot-icon { width: 42px; height: 42px; background: #14161b; border: 3px solid #383f4d; display: flex; justify-content: center; align-items: center; font-size: 20px; flex-shrink: 0; }
+        .card-title { font-size: 0.8rem; color: var(--mc-green); margin-top: 4px; text-shadow: 2px 2px 0 #000; }
+        .card-desc { color: #c5cbd5; font-size: 1.2rem; }
+
+        /* REPOSITORIO ACADÉMICO */
+        .repo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+        .repo-folder {
+            background: #151821;
+            border: 2px solid #4a5468;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.2s;
+        }
+        .repo-folder:hover {
+            border-color: var(--mc-purple);
+            background: #1e222f;
+        }
+
+        /* CALENDARIO Y CRONOGRAMA */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .calendar-box {
+            background: #14171f;
+            border: 2px solid var(--mc-gold);
+            padding: 15px;
+            text-align: center;
+        }
+        .calendar-box h4 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.55rem;
+            color: var(--mc-gold);
+            margin-bottom: 8px;
+        }
+        .date-badge {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.65rem;
+            color: var(--mc-aqua);
+            margin-top: 5px;
+        }
+
+        /* HACKATHON SECCIÓN */
+        .hackathon-section {
+            background: linear-gradient(135deg, #280b3d 0%, #12041c 100%);
+            border: 4px solid var(--mc-purple);
+            box-shadow: inset -4px -4px 0 #11001a, inset 4px 4px 0 #d882ff, 0 10px 30px rgba(170,0,255,0.3);
+            padding: 25px;
+            margin-top: 40px;
+        }
+        .project-list {
+            margin-top: 15px;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+        .project-item {
+            background: #190526;
+            border: 1px solid var(--mc-purple);
+            padding: 10px;
+            margin-bottom: 8px;
+            font-size: 1.15rem;
+        }
+
+        /* CUMPLEAÑOS */
+        .birthday-list {
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .birthday-item {
+            background: #151821;
+            border: 1px solid #3a4150;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.15rem;
+        }
+
+        /* TAREAS */
+        .task-list { margin-top: 15px; max-height: 220px; overflow-y: auto; }
+        .task-item {
+            background: #151821; border: 1px solid #323946; padding: 10px; margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; font-size: 1.15rem;
+        }
+        .task-item.completed { opacity: 0.5; text-decoration: line-through; }
+        .mc-input, .mc-select {
+            width: 100%; background: #101216; border: 3px solid #3a4150; color: #fff; font-family: 'VT323', monospace; font-size: 1.2rem; padding: 8px; outline: none; margin-bottom: 10px;
+        }
+
+        /* TOCADISCOS FLOTANTE DISCRETO EN LA ESQUINA */
+        #musicPlayerWidget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(20, 22, 28, 0.95);
+            border: 3px solid var(--mc-purple);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+            z-index: 1000;
+            width: 280px;
+            padding: 12px;
+            transition: transform 0.3s ease;
+        }
+        #musicPlayerWidget.minimized {
+            transform: translateY(calc(100% - 35px));
+        }
+        .music-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.55rem;
+            color: var(--mc-yellow);
+            margin-bottom: 8px;
+        }
+
+        .mc-btn {
+            display: inline-block; background: #8a2be2; border: 3px solid #000; color: #ffffff; font-family: 'Press Start 2P', cursive; font-size: 0.55rem; padding: 10px 15px; text-decoration: none; text-align: center; cursor: pointer; text-shadow: 2px 2px 0 #000; margin-top: 5px;
+        }
+
+        footer { text-align: center; padding: 35px 20px; background: #111317; border-top: 4px solid #2d333f; margin-top: 50px; }
+        .footer-brand { font-size: 1.4rem; color: var(--mc-purple); margin-bottom: 15px; text-shadow: 3px 3px 0 #000; }
+
+        #toast { visibility: hidden; min-width: 250px; background-color: #1a0826; color: var(--mc-yellow); text-align: center; border: 3px solid var(--mc-purple); padding: 16px; position: fixed; z-index: 2000; bottom: 80px; left: 50%; transform: translateX(-50%); font-family: 'Press Start 2P', cursive; font-size: 0.6rem; }
+        #toast.show { visibility: visible; animation: fadeInOut 3s forwards; }
+        @keyframes fadeInOut { 0% { opacity: 0; bottom: 50px; } 15% { opacity: 1; bottom: 80px; } 85% { opacity: 1; bottom: 80px; } 100% { opacity: 0; bottom: 50px; } }
+
+        @media (max-width: 768px) {
+            .card-grid-2col, .calendar-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="container">
+
+        <!-- HEADER INSTITUCIONAL -->
+        <header>
+            <div class="subtitle-ep">Facultad de Ingeniería de Sistemas e Informática - UNMSM</div>
+            <h1 class="main-title">INTELIGENCIA ARTIFICIAL</h1>
+            <p class="slogan">"Comunidad Académica Oficial - Estudiantes del Segundo Ciclo"</p>
+        </header>
+
+        <main>
+            <!-- 1. CALENDARIO Y CRONOGRAMA 2026-II -->
+            <div class="section-header">
+                <span class="section-icon"></span>
+                <h2 class="section-title">1. CRONOGRAMA ACADÉMICO 2026-II</h2>
+            </div>
+            <div class="mc-card">
+                <div class="card-top">
+                    <div class="slot-icon">📅</div>
+                    <h3 class="card-title">Fechas Clave del Semestre</h3>
+                </div>
+                <p class="card-desc">Fechas oficiales programadas para el ciclo lectivo en curso.</p>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-box">
+                        <h4>INICIO DE CLASES</h4>
+                        <div class="date-badge">Lunes 24 de Agosto, 2026</div>
+                    </div>
+                    <div class="calendar-box">
+                        <h4>EVALUACIONES PARCIALES</h4>
+                        <div class="date-badge">12 al 17 de Octubre, 2026</div>
+                    </div>
+                    <div class="calendar-box">
+                        <h4>EVALUACIONES FINALES</h4>
+                        <div class="date-badge">07 al 11 de Diciembre, 2026</div>
+                    </div>
+                    <div class="calendar-box">
+                        <h4>TÉRMINO DE CLASES</h4>
+                        <div class="date-badge">Sábado 12 de Diciembre, 2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. REPOSITORIO ACADÉMICO -->
+            <div class="section-header">
+                <span class="section-icon" style="background-color: var(--mc-gold);"></span>
+                <h2 class="section-title" style="color: var(--mc-gold);">2. REPOSITORIO ACADÉMICO & RECURSOS</h2>
+            </div>
+            <div class="mc-card">
+                <div class="card-top">
+                    <div class="slot-icon" style="border-color: var(--mc-gold);">📁</div>
+                    <h3 class="card-title" style="color: var(--mc-gold);">Materiales Compartidos - 2do Ciclo IA</h3>
+                </div>
+                <p class="card-desc">Accede al Drive con apuntes, laboratorios, solucionarios y guías de los cursos.</p>
+                
+                <div class="repo-grid">
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Programación I</span></a>
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Matemáticas Discretas</span></a>
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Cálculo II</span></a>
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Física I</span></a>
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Investigación Formativa</span></a>
+                    <a href="https://drive.google.com" target="_blank" class="repo-folder">📁 <span>Redacción 2</span></a>
+                </div>
+                <a href="https://drive.google.com/drive/folders/1fa7SzHkJD3_Pf7Det-vqiIGNf_J430Mu?usp=sharing" target="_blank" class="mc-btn" style="width: 100%; margin-top: 15px; text-align: center;">ABRIR GOOGLE DRIVE GENERAL 📂</a>
+            </div>
+
+            <!-- 3. HACKATHON INTERACTIVA -->
+            <div class="hackathon-section">
+                <div class="card-top">
+                    <div class="slot-icon" style="background: #2b0044; border-color: var(--mc-purple);">🚀</div>
+                    <h2 class="card-title" style="color: var(--mc-yellow); font-size: 0.95rem;">3. IA-HACKATHON: REGISTRO DE EQUIPOS Y PROYECTOS</h2>
+                </div>
+                <p class="card-desc" style="color: #e2c2ff; margin-bottom: 15px;">
+                    Inscribe a tu grupo, define a tus integrantes y presenta el nombre de tu proyecto innovador de IA.
+                </p>
+                
+                <div class="card-grid-2col" style="margin-top: 15px;">
+                    <div style="background: #150422; border: 2px solid var(--mc-purple); padding: 15px;">
+                        <h4 style="font-family: 'Press Start 2P', cursive; font-size: 0.55rem; color: var(--mc-yellow); margin-bottom: 10px;">REGISTRAR EQUIPO</h4>
+                        <form id="hackForm">
+                            <input type="text" id="hackTeam" class="mc-input" placeholder="Nombre del Equipo" required maxlength="30">
+                            <input type="text" id="hackMembers" class="mc-input" placeholder="Participantes (Ej: Ana, Luis, Carlos)" required maxlength="60">
+                            <input type="text" id="hackProject" class="mc-input" placeholder="Nombre / Idea del Proyecto IA" required maxlength="50">
+                            <button type="submit" class="mc-btn" style="width: 100%;">INSCRIBIR PROYECTO 🏆</button>
+                        </form>
+                    </div>
+                    
+                    <div style="background: #150422; border: 2px solid var(--mc-purple); padding: 15px;">
+                        <h4 style="font-family: 'Press Start 2P', cursive; font-size: 0.55rem; color: var(--mc-green); margin-bottom: 10px;">EQUIPOS INSCRITOS</h4>
+                        <div class="project-list" id="projectList"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. GESTOR DE TAREAS & CUMPLEAÑOS -->
+            <div class="card-grid-2col" style="margin-top: 40px;">
+                <!-- Tareas -->
+                <div class="mc-card">
+                    <div class="card-top">
+                        <div class="slot-icon">📝</div>
+                        <h3 class="card-title">Tareas Pendientes</h3>
+                    </div>
+                    <form id="taskForm">
+                        <select id="taskCourse" class="mc-select" required>
+                            <option value="">Selecciona curso...</option>
+                            <option value="Programación I">Programación I</option>
+                            <option value="Matemáticas Discretas">Matemáticas Discretas</option>
+                            <option value="Cálculo II">Cálculo II</option>
+                            <option value="Física I">Física I</option>
+                        </select>
+                        <input type="text" id="taskDesc" class="mc-input" placeholder="Descripción corta..." required maxlength="50">
+                        <button type="submit" class="mc-btn" style="width: 100%;">AGREGAR TAREA 📌</button>
+                    </form>
+                    <div class="task-list" id="taskList"></div>
+                </div>
+
+                <!-- Cumpleaños -->
+                <div class="mc-card">
+                    <div class="card-top">
+                        <div class="slot-icon" style="border-color: var(--mc-pink, #ff69b4);">🎂</div>
+                        <h3 class="card-title" style="color: #ff99cc;">Cumpleaños de la Promo</h3>
+                    </div>
+                    <form id="bdayForm">
+                        <input type="text" id="bdayName" class="mc-input" placeholder="Nombre y Apellido" required maxlength="30">
+                        <input type="text" id="bdayDate" class="mc-input" placeholder="Fecha (Ej: 15 Ago)" required maxlength="20">
+                        <button type="submit" class="mc-btn" style="width: 100%; background: #c71585;">REGISTRAR CUMPLE 🎉</button>
+                    </form>
+                    <div class="birthday-list" id="birthdayList"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-brand pixel-font">INTELIGENCIA ARTIFICIAL - UNMSM</div>
+            <p style="color: var(--mc-purple); font-size: 1.1rem;">Escuela Profesional de Ingeniería de Inteligencia Artificial</p>
+        </footer>
+
+    </div>
+
+    <!-- REPRODUCTOR DE MÚSICA FLOTANTE DISCRETO EN LA ESQUINA -->
+    <div id="musicPlayerWidget">
+        <div class="music-header" onclick="togglePlayer()">
+            <span>🎵 DJ ESQUINA (MUSIC)</span>
+            <span id="toggleIcon">[_]</span>
+        </div>
+        <div id="musicBody">
+            <p style="font-size: 0.95rem; color: #a0aec0; margin-bottom: 6px;">Pega tu link de YouTube:</p>
+            <input type="text" id="ytLinkInput" class="mc-input" placeholder="Ej: jfKfPfyJRdk o URL" style="font-size: 1rem; margin-bottom: 6px;">
+            <button class="mc-btn" style="width: 100%; font-size: 0.5rem; padding: 6px;" onclick="playCustomMusic()">REPRODUCIR 🎶</button>
+            <button class="mc-btn" style="width: 100%; font-size: 0.5rem; padding: 6px; background: #444; margin-top: 4px;" onclick="stopCustomMusic()">DETENER ⏹</button>
+        </div>
+        <div id="ytContainer" style="display:none; margin-top:8px;">
+            <iframe id="customYtIframe" width="100%" height="70" src="" frameborder="0" allow="autoplay"></iframe>
+        </div>
+    </div>
+
+    <div id="toast">Notificación del sistema</div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.className = 'show';
+            setTimeout(() => { toast.className = toast.className.replace('show', ''); }, 3000);
+        }
+
+        // TOCADISCOS FLOTANTE
+        function togglePlayer() {
+            const widget = document.getElementById('musicPlayerWidget');
+            widget.classList.toggle('minimized');
+            document.getElementById('toggleIcon').innerText = widget.classList.contains('minimized') ? '[+]' : '[_]';
+        }
+
+        function playCustomMusic() {
+            const input = document.getElementById('ytLinkInput').value.trim();
+            if(!input) return;
+            let videoId = input;
+            if(input.includes('youtu.be/')) {
+                videoId = input.split('youtu.be/')[1].split('?')[0];
+            } else if(input.includes('watch?v=')) {
+                videoId = input.split('watch?v=')[1].split('&')[0];
+            }
+
+            const container = document.getElementById('ytContainer');
+            const iframe = document.getElementById('customYtIframe');
+            container.style.display = 'block';
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            showToast('🎵 ¡Música cargada en la esquina!');
+        }
+
+        function stopCustomMusic() {
+            const container = document.getElementById('ytContainer');
+            const iframe = document.getElementById('customYtIframe');
+            iframe.src = '';
+            container.style.display = 'none';
+            showToast('⏹ Música detenida');
+        }
+
+        // HACKATHON REGISTRO LOCALSTORAGE
+        const hackForm = document.getElementById('hackForm');
+        const projectList = document.getElementById('projectList');
+        let hackTeams = JSON.parse(localStorage.getItem('ia_hack_teams')) || [
+            { team: "NeuralCoders", members: "Miguel, Kiara, Alex", project: "Asistente LLM Académico" }
+        ];
+
+        function renderHackTeams() {
+            projectList.innerHTML = '';
+            hackTeams.forEach(h => {
+                projectList.innerHTML += `
+                    <div class="project-item">
+                        <strong style="color: var(--mc-yellow);">${h.team}</strong><br>
+                        <span style="font-size:0.95rem; color:#ccc;">👥 ${h.members}</span><br>
+                        <span style="font-size:0.95rem; color:var(--mc-aqua);">💡 ${h.project}</span>
+                    </div>
+                `;
+            });
+        }
+        hackForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const team = document.getElementById('hackTeam').value.trim();
+            const members = document.getElementById('hackMembers').value.trim();
+            const project = document.getElementById('hackProject').value.trim();
+            if(!team || !members || !project) return;
+
+            hackTeams.push({ team, members, project });
+            localStorage.setItem('ia_hack_teams', JSON.stringify(hackTeams));
+            hackForm.reset();
+            renderHackTeams();
+            showToast('🚀 ¡Equipo inscrito en la Hackathon!');
+        });
+        renderHackTeams();
+
+        // TAREAS LOCALSTORAGE
+        const taskForm = document.getElementById('taskForm');
+        const taskList = document.getElementById('taskList');
+        let tasks = JSON.parse(localStorage.getItem('ia_tasks')) || [];
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            if(tasks.length === 0) {
+                taskList.innerHTML = '<p style="color: #6c757d; font-size: 1rem; text-align: center;">Sin tareas registradas.</p>';
+                return;
+            }
+            tasks.forEach((t, index) => {
+                taskList.innerHTML += `
+                    <div class="task-item ${t.completed ? 'completed' : ''}">
+                        <div><strong style="color: var(--mc-yellow);">${t.course}:</strong> ${t.desc}</div>
+                        <div>
+                            <button onclick="toggleTask(${index})" style="background:none; border:none; cursor:pointer; font-size:1.1rem;">✔️</button>
+                            <button onclick="deleteTask(${index})" style="background:none; border:none; cursor:pointer; font-size:1.1rem;">❌</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const course = document.getElementById('taskCourse').value;
+            const desc = document.getElementById('taskDesc').value.trim();
+            if(!course || !desc) return;
+            tasks.push({ course, desc, completed: false });
+            localStorage.setItem('ia_tasks', JSON.stringify(tasks));
+            taskForm.reset();
+            renderTasks();
+            showToast('📌 Tarea agregada');
+        });
+        window.toggleTask = function(i) { tasks[i].completed = !tasks[i].completed; localStorage.setItem('ia_tasks', JSON.stringify(tasks)); renderTasks(); }
+        window.deleteTask = function(i) { tasks.splice(i, 1); localStorage.setItem('ia_tasks', JSON.stringify(tasks)); renderTasks(); showToast('🗑️ Tarea eliminada'); }
+        renderTasks();
+
+        // CUMPLEAÑOS LOCALSTORAGE
+        const bdayForm = document.getElementById('bdayForm');
+        const birthdayList = document.getElementById('birthdayList');
+        let birthdays = JSON.parse(localStorage.getItem('ia_birthdays')) || [
+            { name: "Miguel Araujo", date: "28 Mar" },
+            { name: "Kiara Achulli", date: "20 Oct" },
+            { name: "Alexandra Sullca", date: "23 Mar" }
+        ];
+
+        function renderBirthdays() {
+            birthdayList.innerHTML = '';
+            birthdays.forEach(b => {
+                birthdayList.innerHTML += `
+                    <div class="birthday-item">
+                        <span>🎂 ${b.name}</span>
+                        <span style="color: var(--mc-yellow);">${b.date}</span>
+                    </div>
+                `;
+            });
+        }
+        bdayForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('bdayName').value.trim();
+            const date = document.getElementById('bdayDate').value.trim();
+            if(!name || !date) return;
+            birthdays.push({ name, date });
+            localStorage.setItem('ia_birthdays', JSON.stringify(birthdays));
+            bdayForm.reset();
+            renderBirthdays();
+            showToast('🎉 ¡Cumpleaños registrado!');
+        });
+        renderBirthdays();
+
+        // CANVAS PARTICULAS
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        for (let i = 0; i < 25; i++) {
+            particles.push({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                size: Math.random() * 3 + 1, speedY: -(Math.random() * 0.4 + 0.1),
+                opacity: Math.random() * 0.4 + 0.2, color: '#bf55ec'
+            });
+        }
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.y += p.speedY;
+                if (p.y < 0) { p.y = canvas.height; p.x = Math.random() * canvas.width; }
+                ctx.fillStyle = p.color; ctx.globalAlpha = p.opacity;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    </script>
+</body>
+</html>
